@@ -151,6 +151,9 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
         mcp = self.make_server(None)
         transport = httpx.ASGITransport(app=mcp.http_app())
         async with httpx.AsyncClient(transport=transport, base_url="https://relay.example.com") as client:
+            health = await client.get("/healthz")
+            self.assertEqual(health.status_code, 200)
+            self.assertEqual(health.json(), {"status": "ok"})
             response = await client.post("/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
             self.assertEqual(response.status_code, 401)
             self.assertIn("resource_metadata", response.headers["www-authenticate"])

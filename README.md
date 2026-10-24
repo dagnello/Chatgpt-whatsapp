@@ -22,6 +22,9 @@ ChatGPT connection, and unattended task posting still need end-to-end verificati
 
 ## Hosting
 
+For the managed hosting deployment, follow [the Railway plan](RAILWAY.md).
+The Docker Compose steps below remain available for a standalone Linux host.
+
 Use a persistent Linux host with Docker Compose and a DNS name pointing to it.
 WAHA's recommendation is 2 CPUs and 4 GB RAM for one account. This package uses
 WAHA's WEBJS engine. A serverless function or static website host cannot run this

@@ -12,6 +12,7 @@ from fastmcp.server.dependencies import get_access_token
 from key_value.aio.stores.disk import DiskStore
 from key_value.aio.wrappers.encryption import FernetEncryptionWrapper
 from pydantic import Field
+from starlette.responses import JSONResponse
 from typing import Annotated
 
 from bridge import Bridge, BridgeError, Config, authorize_owner
@@ -68,6 +69,11 @@ def create_server(environ=None, *, bridge_override=None, token_getter=None):
         except PermissionError as exc:
             raise ToolError(str(exc)) from None
 
+    @mcp.custom_route("/healthz", methods=["GET"])
+    async def healthz(request):
+        # Process health only; this does not claim WhatsApp is paired or reachable.
+        return JSONResponse({"status": "ok"})
+
     @mcp.tool(annotations={"readOnlyHint": True, "openWorldHint": True})
     async def read_messages(
         limit: Annotated[int, Field(ge=1, le=50)] = 10,
@@ -107,5 +113,5 @@ def create_server(environ=None, *, bridge_override=None, token_getter=None):
 if __name__ == "__main__":
     load_dotenv()
     os.umask(0o077)
-    create_server().run(transport="http", host="0.0.0.0", port=8000,
+    create_server().run(transport="http", host="0.0.0.0", port=int(os.getenv("PORT", "8000")),
                         stateless_http=True, show_banner=False)
