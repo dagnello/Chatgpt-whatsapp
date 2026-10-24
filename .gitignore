@@ -3,3 +3,10 @@
 data/
 __pycache__/
 *.pyc
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+*.tfvars.json
+crash.log

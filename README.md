@@ -22,8 +22,10 @@ ChatGPT connection, and unattended task posting still need end-to-end verificati
 
 ## Hosting
 
-For the managed hosting deployment, follow [the Railway plan](RAILWAY.md).
-The Docker Compose steps below remain available for a standalone Linux host.
+The selected deployment is [Oracle Cloud Always Free](ORACLE.md). Its launch
+link loads the infrastructure from this repository into Oracle Resource Manager.
+The [Railway configuration](RAILWAY.md) remains an alternative, not the selected host.
+The Docker Compose steps below also work on a standalone Linux host.
 
 Use a persistent Linux host with Docker Compose and a DNS name pointing to it.
 WAHA's recommendation is 2 CPUs and 4 GB RAM for one account. This package uses

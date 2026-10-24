@@ -1,0 +1,50 @@
+title: WhatsApp proxy for ChatGPT
+description: One dedicated ARM VM for a private WhatsApp bridge. Targets Always Free resources; check unused tenancy allowances before applying.
+schemaVersion: 1.1.0
+version: "1.0"
+locale: en
+variableGroups:
+  - title: Account
+    variables:
+      - tenancy_ocid
+      - region
+      - compartment_ocid
+      - availability_domain
+  - title: Private administration
+    variables:
+      - ssh_public_key
+      - ssh_source_cidr
+  - title: Free allowance
+    variables:
+      - confirm_free_allowance
+variables:
+  tenancy_ocid:
+    type: string
+    visible: false
+  region:
+    type: string
+    visible: false
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    title: Deployment compartment
+    required: true
+  availability_domain:
+    type: oci:identity:availabilitydomain:name
+    title: Availability domain
+    required: true
+    dependsOn:
+      compartmentId: compartment_ocid
+  ssh_public_key:
+    type: oci:core:ssh:publickey
+    title: Public SSH key
+    required: true
+  ssh_source_cidr:
+    type: string
+    title: Your public IPv4 address with /32
+    required: true
+    description: Restricts SSH access to your computer or a trusted subnet. Example 203.0.113.7/32.
+  confirm_free_allowance:
+    type: boolean
+    title: I checked that the free allowance is available
+    required: true
+    description: This VM uses 2 A1 OCPUs, 4 GB RAM and 50 GB disk. Check existing tenancy usage first. It must run in your home region.

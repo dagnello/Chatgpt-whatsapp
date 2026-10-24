@@ -1,0 +1,25 @@
+#cloud-config
+package_update: true
+packages:
+  - ca-certificates
+  - git
+  - docker.io
+  - docker-compose-v2
+  - python3-venv
+  - iptables-persistent
+write_files:
+  - path: /usr/local/sbin/whatsapp-bootstrap
+    permissions: '0700'
+    encoding: b64
+    content: ${bootstrap_base64}
+  - path: /usr/local/lib/whatsapp-setup.py
+    permissions: '0755'
+    encoding: b64
+    content: ${setup_base64}
+  - path: /usr/local/bin/whatsapp-setup
+    permissions: '0755'
+    content: |
+      #!/bin/sh
+      exec /opt/whatsapp-proxy/.venv/bin/python /usr/local/lib/whatsapp-setup.py
+runcmd:
+  - [bash, /usr/local/sbin/whatsapp-bootstrap, '${app_revision}']
