@@ -1,0 +1,64 @@
+services:
+  waha:
+    image: ${WAHA_IMAGE:-devlikeapro/waha}
+    restart: unless-stopped
+    environment:
+      WAHA_API_KEY: ${WAHA_API_KEY_HASH}
+      WAHA_DASHBOARD_USERNAME: ${WAHA_DASHBOARD_USERNAME}
+      WAHA_DASHBOARD_PASSWORD: ${WAHA_DASHBOARD_PASSWORD}
+      WHATSAPP_SWAGGER_USERNAME: ${WAHA_DASHBOARD_USERNAME}
+      WHATSAPP_SWAGGER_PASSWORD: ${WAHA_DASHBOARD_PASSWORD}
+      WHATSAPP_DEFAULT_ENGINE: WEBJS
+      WHATSAPP_RESTART_ALL_SESSIONS: "true"
+      WAHA_API_DOWNLOAD_MEDIA: "false"
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - sessions:/app/.sessions
+    networks:
+      - relay
+  proxy:
+    build: .
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${PUBLIC_URL}
+      GITHUB_OWNER_ID: ${GITHUB_OWNER_ID}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      OAUTH_SIGNING_KEY: ${OAUTH_SIGNING_KEY}
+      OAUTH_STORAGE_KEY: ${OAUTH_STORAGE_KEY}
+      WAHA_URL: http://waha:3000
+      WAHA_API_KEY: ${WAHA_API_KEY}
+      WAHA_CHAT_ID: ${WAHA_CHAT_ID}
+      WAHA_SESSION: ${WAHA_SESSION:-default}
+    volumes:
+      - proxy_data:/data
+    depends_on:
+      - waha
+    networks:
+      - relay
+      - edge
+  https:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - proxy
+    networks:
+      - edge
+volumes:
+  sessions:
+  proxy_data:
+  caddy_data:
+  caddy_config:
+networks:
+  relay:
+  edge:
