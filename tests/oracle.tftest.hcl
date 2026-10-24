@@ -30,7 +30,7 @@ variables {
 run "free_shape_and_private_administration" {
   command = plan
   assert {
-    condition     = oci_core_instance.relay.shape == "VM.Standard.A1.Flex" && oci_core_instance.relay.shape_config[0].ocpus == 2 && oci_core_instance.relay.shape_config[0].memory_in_gbs == 4 && oci_core_instance.relay.source_details[0].boot_volume_size_in_gbs == 50
+    condition     = oci_core_instance.relay.shape == "VM.Standard.A1.Flex" && oci_core_instance.relay.shape_config[0].ocpus == 2 && oci_core_instance.relay.shape_config[0].memory_in_gbs == 4 && tonumber(oci_core_instance.relay.source_details[0].boot_volume_size_in_gbs) == 50
     error_message = "The deployment must stay within the reviewed VM/disk limits."
   }
   assert {

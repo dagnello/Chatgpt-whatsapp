@@ -25,8 +25,9 @@ scheduled unattended posting. No real WhatsApp messages were sent during tests.
   syntax, and the interactive setup helper's Python compilation were checked.
 - The OCI provider's download signatures/checksums were verified. This sandbox
   could not start the provider plugin; local Terraform validate/mock plans could
-  not complete. CI runs `terraform validate` and `terraform test` without real
-  Oracle credentials or resource creation; check the Actions result.
+  not complete. GitHub Actions successfully ran `terraform validate`.
+  CI also runs `terraform test` without real Oracle credentials or resource
+  creation; check the Actions result for all mock-plan assertions.
 - Mock plans cover the fixed A1/disk sizing, allowed inbound ports, restricted
   SSH, the home-region requirement and explicit unused-free-allowance check.
 - Cloud-init has not run on a real Oracle VM yet. Account provisioning, remaining
